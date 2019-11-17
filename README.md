@@ -19,5 +19,5 @@
 假设服务器软件能满足要求，那么：
 
 1. 配置Nginx或Apache的Web目录到此项目的public文件夹。
-2. 赋值项目的`config.example.php`文件为`config.php`，然后修改`config.php`内的配置。
+2. 复制项目的`config.example.php`文件为`config.php`，然后修改`config.php`内的配置。
 3. 配置后台任务运行`php test.php`，或者`work.sh`脚本，用于爬数据。
