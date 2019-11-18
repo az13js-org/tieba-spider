@@ -84,12 +84,14 @@ $x = Connect::getInstance(
     $config['password'],
     $config['database']
 );
+file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'test.log', date('Y-m-d H:i:s') . ' 开始' . PHP_EOL, FILE_APPEND);
 $x->send(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'database.sql'));
 
 $cookie = '';
 $name = $config['tieba'];
 $s = new Tieba($name, $cookie);
 
+file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'test.log', date('Y-m-d H:i:s') . ' 解析数据' . PHP_EOL, FILE_APPEND);
 foreach ($s->getTiebaHot() as $k => $v_arr) {
     /* $k 对应第几个贴吧，$v_arr 贴吧的热铁数组 */
     $newHotPosting = compareForLastTiebaHotDataAndFindNew($k, $v_arr);
