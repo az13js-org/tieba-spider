@@ -26,6 +26,23 @@ class MultipleUrlContextLoader
     private $userAgent = '';
     /** @var array Header，可以是空 */
     private $headers = [];
+    /** @var int 超时时间，单位是秒，默认是60秒 */
+    private $timeout = 60;
+
+    /**
+     * 设置超时时间
+     *
+     * 不是必须设置的，默认为60秒
+     *
+     * @param int $timeout
+     * @return bool 设置成功返回true，不对的时候返回false。
+     * @author az13js
+     */
+    public function setTimeout(int $timeout): bool
+    {
+        $this->timeout = $timeout;
+        return true;
+    }
 
     /**
      * 设置所有请求链接携带的cookie信息
@@ -154,7 +171,7 @@ class MultipleUrlContextLoader
         while (true) {
             curl_multi_exec($handle, $running);
             if ($running > 0) {
-                curl_multi_select($handle, 60);
+                curl_multi_select($handle, $this->timeout);
             } else {
                 break;
             }
@@ -198,9 +215,9 @@ class MultipleUrlContextLoader
             CURLOPT_UNRESTRICTED_AUTH => false,
             CURLOPT_UPLOAD => false,
             CURLOPT_VERBOSE => false,
-            CURLOPT_CONNECTTIMEOUT => 60 * 60,
-            CURLOPT_TIMEOUT => 60 * 60,
-            CURLOPT_DNS_CACHE_TIMEOUT => 120,
+            CURLOPT_CONNECTTIMEOUT => $this->timeout,
+            CURLOPT_TIMEOUT => $this->timeout,
+            CURLOPT_DNS_CACHE_TIMEOUT => $this->timeout,
             CURLOPT_MAXCONNECTS => 65535,
             CURLOPT_MAXREDIRS => 20,
             /*CURLOPT_COOKIE => '',
