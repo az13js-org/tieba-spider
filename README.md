@@ -12,6 +12,10 @@
 
 ![热门帖子](README-images/tieba2.png "图2：最新热门帖子显示")
 
+3. 显示部分最新的帖子（从首页获取）。
+
+![最新帖子](README-images/tieba3.png "图3：最新帖子显示")
+
 ## 安装和使用方法
 
 使用`PHP 7`（具备`CURL`、`PDO`、`MySQL`和`mbstring`扩展）、MySQL/MariaDB以及提供Web服务（如`Nginx`或`Apache`，不需要查看页面的话就不用）的服务器足以满足要求。
