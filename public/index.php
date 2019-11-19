@@ -25,6 +25,11 @@ $hots = $connect->recv();
 $connect->send('SELECT count(*) AS `total` FROM `hots`');
 $hotTotalQuery = $connect->recv();
 
+$connect->send('SELECT create_time,tieba_name,post FROM `posts` ORDER BY create_time DESC LIMIT 20');
+$posts = $connect->recv();
+$connect->send('SELECT count(*) AS `total` FROM `posts`');
+$tieziTotalQuery = $connect->recv();
+
 $connect->send('SELECT tieba_name FROM `hots` GROUP BY tieba_name');
 $tieba = $connect->recv();
 ?><html>
@@ -64,6 +69,19 @@ $tieba = $connect->recv();
         <?php } ?>
     </table>
     <p>当前已获取的用户数：<?php echo $totalQuery[0]['total'] ?? 0; ?>。</p>
+
+    <h2>最新获得的部分帖子</h2>
+    <table>
+        <tr><th>帖子名称</th><th>所属贴吧</th><th>获得时间</th></tr>
+        <?php foreach ($posts as $post) { ?>
+        <tr>
+            <td><a href="http://tieba.baidu.com/f/search/res?ie=utf-8&amp;qw=<?php echo urlencode($post['post']); ?>" target="_blank"><?php echo $post['post']; ?></a></td>
+            <td class="text-center"><a href="http://tieba.baidu.com/f?ie=utf-8&amp;kw=<?php echo urlencode($post['tieba_name']); ?>&amp;fr=search" target="_blank"><?php echo $post['tieba_name']; ?></a></td>
+            <td class="text-center"><?php echo $post['create_time']; ?></td>
+        </tr>
+        <?php } ?>
+    </table>
+    <p>当前已获取的帖子数：<?php echo $tieziTotalQuery[0]['total'] ?? 0; ?>。</p>
 
     <h2>最新获得的部分热贴</h2>
     <table>

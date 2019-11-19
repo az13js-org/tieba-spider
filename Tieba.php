@@ -65,6 +65,63 @@ class Tieba
     }
 
     /**
+     * 获取所有帖子
+     *
+     * @return string[]
+     */
+    public function getAllText(): array
+    {
+        $results = [];
+        foreach ($this->content as $k => $text) {
+            $results[] = $this->getText($text);
+        }
+        return $results;
+    }
+
+    /**
+     * 获取所有帖子
+     *
+     * @return string[]
+     */
+    public function getText(string $text): array
+    {
+        $startString = '<a';
+        $endString = '</a>';
+        $startStringLen = mb_strlen($startString);
+        $endStringLen = mb_strlen($endString);
+        $start = 0;
+        $results = [];
+        $find = ' title="';
+        $findLen = mb_strlen($find);
+        $findEnd = "\"";
+        while (true) {
+            $head = mb_stripos($text, $startString, $start);
+            if (false === $head) {
+                break;
+            }
+            $tail = mb_stripos($text, $endString, $start + $startStringLen);
+            if (false === $tail) {
+                break;
+            }
+            $centerText = mb_substr($text, $head + $startStringLen, $tail - $head - $startStringLen);
+            if (
+                false !== mb_stripos($centerText, ' rel="noreferrer"') &&
+                false !== mb_stripos($centerText, "/p/") &&
+                false !== ($titleStart = mb_stripos($centerText, $find)) &&
+                false !== mb_stripos($centerText, ' target="_blank"')
+            ) {
+                $titleEnd = mb_stripos($centerText, $findEnd, $titleStart + $findLen);
+                if (false === $titleEnd) {
+                    break;
+                }
+                $results[] = mb_substr($centerText, $titleStart + $findLen, $titleEnd - $titleStart - $findLen);
+            }
+            $start = $tail + $endStringLen;
+        }
+        return $results;
+    }
+
+    /**
      * 获取百度贴吧首页信息
      *
      * @param string[] $tieba
